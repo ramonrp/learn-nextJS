@@ -6,7 +6,6 @@ import Card from "../components/card";
 
 import { getCoffeeStoresData } from "../services/getCoffeStores";
 export default function Home({ coffeStoreData }) {
-  console.log(coffeStoreData);
   const handleButtonBannerClick = () => {
     console.log("button banner click");
   };
@@ -28,13 +27,13 @@ export default function Home({ coffeStoreData }) {
         <h2 className={styles.secondTitle}>Madrid Coffe Stores</h2>
         <div className={styles.cardLayout}>
           {coffeStoreData.map((coffeStore) => {
-            const { fsq_id: id, name } = coffeStore;
+            const { id, name, imgUrl } = coffeStore;
             return (
               <Card
                 key={id}
                 className={styles.card}
                 title={name}
-                img="/static/hero-image.png"
+                img={imgUrl}
                 href={`/coffee-store/${id}`}
               />
             );
@@ -47,7 +46,7 @@ export default function Home({ coffeStoreData }) {
 
 export async function getStaticProps(context) {
   const MadridLatLong = "40.41708874959783%2C-3.702210342724132";
-  const querySearch = "coffee";
+  const querySearch = "cafe";
   const limit = 6;
   const coffeStoreData = await getCoffeeStoresData(
     MadridLatLong,

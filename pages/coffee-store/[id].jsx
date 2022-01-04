@@ -1,18 +1,27 @@
 import Link from "next/link";
+import Image from "next/image";
 import { getCoffeeStoresData } from "../../services/getCoffeStores";
+import styles from "./coffe-store.module.css";
 const Store = ({ coffeStoreData }) => {
-  console.log(coffeStoreData);
-  const { name, location } = coffeStoreData;
-  const { address, neighborhood } = location;
+  const { name, neighborhood, address, imgUrl } = coffeStoreData;
 
   return (
-    <div className="glass">
-      <Link href="/">
-        <a>Back to Home</a>
-      </Link>{" "}
-      <p>{name}</p>
-      <p>{address}</p>
-      {neighborhood.length > 0 && <p>{neighborhood[0]}</p>}
+    <div className={styles.layout}>
+      <div className={styles.col1}>
+        <Link href="/">
+          <a>Back to Home</a>
+        </Link>{" "}
+        <div>
+          <Image src={imgUrl} alt={name} width={600} height={360}></Image>
+        </div>
+      </div>
+      <div className={styles.col2}>
+        <div className="glass">
+          <p>{name}</p>
+          <p>{address}</p>
+          {neighborhood !== undefined > 0 && <p>{neighborhood}</p>}
+        </div>
+      </div>
     </div>
   );
 };
@@ -29,7 +38,7 @@ export async function getStaticProps({ params }) {
     querySearch,
     limit
   );
-  const coffeStoreData = coffeStoresData.find((store) => store.fsq_id == id);
+  const coffeStoreData = coffeStoresData.find((store) => store.id == id);
   return {
     props: { coffeStoreData },
   };
@@ -45,7 +54,7 @@ export async function getStaticPaths() {
     limit
   );
   return {
-    paths: coffeStoreData.map((store) => ({ params: { id: store.fsq_id } })),
+    paths: coffeStoreData.map((store) => ({ params: { id: store.id } })),
     fallback: "blocking",
   };
 }
