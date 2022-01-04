@@ -3,6 +3,8 @@ import styles from "../styles/Home.module.css";
 import Banner from "../components/banner";
 import Hero from "../components/hero";
 import Card from "../components/card";
+
+import { getCoffeeStoresData } from "../services/getCoffeStores";
 export default function Home({ coffeStoreData }) {
   console.log(coffeStoreData);
   const handleButtonBannerClick = () => {
@@ -47,20 +49,11 @@ export async function getStaticProps(context) {
   const MadridLatLong = "40.41708874959783%2C-3.702210342724132";
   const querySearch = "cafe";
   const limit = 6;
-  const options = {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      Authorization: String(process.env.FOUR_SQUARE_KEY),
-    },
-  };
-
-  const resp = await fetch(
-    `https://api.foursquare.com/v3/places/nearby?ll=${MadridLatLong}&query=${querySearch}&limit=${limit}`,
-    options
+  const coffeStoreData = await getCoffeeStoresData(
+    MadridLatLong,
+    querySearch,
+    limit
   );
-  const coffeStoreResult = await resp.json();
-  const coffeStoreData = coffeStoreResult.results;
 
   return {
     props: { coffeStoreData },
