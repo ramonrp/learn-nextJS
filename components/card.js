@@ -1,16 +1,23 @@
 import Link from "next/link";
 import Image from "next/image";
-import styles from "card.module.css";
-const Card = (title, img, href) => {
+import cls from "classnames";
+import styles from "./card.module.css";
+const Card = ({ title, img, href, className }) => {
   return (
-    <div>
-      <Link href={href}>
-        <a>
-          <h2>{title}</h2>
-          <Image src={img} alt={title} width={260} height={260}></Image>
-        </a>
-      </Link>
-    </div>
+    <Link href={href}>
+      <a className={className}>
+        <div className={cls("glass", styles.container)}>
+          <h2 className={styles.cardHeader}>{title}</h2>
+          <Image
+            className={styles.cardImage}
+            src={img}
+            alt={title}
+            width={260}
+            height={260}
+          ></Image>
+        </div>
+      </a>
+    </Link>
   );
 };
 
