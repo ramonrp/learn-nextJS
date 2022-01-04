@@ -17,6 +17,18 @@
   top: 0;
 }
 
+.cardLayout {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  column-gap: 1.5rem;
+  row-gap: 1.5rem;
+  justify-items: center;
+}
+
+.card {
+  max-width: 300px;
+}
+
 @media (min-width: 640px) {
   .container {
     padding-left: 1rem /* 16px */;
@@ -61,6 +73,9 @@
     margin-top: 5rem /* 80px */;
     padding-left: 2rem /* 32px */;
     padding-right: 2rem /* 32px */;
+  }
+  .cardLayout {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
