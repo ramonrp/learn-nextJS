@@ -25,6 +25,11 @@
   justify-items: center;
 }
 
+.secondTitle {
+  margin-top: 3rem;
+  margin-bottom: 2rem;
+}
+
 .card {
   max-width: 300px;
 }

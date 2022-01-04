@@ -25,7 +25,7 @@ export default function Home({ coffeStoreData }) {
           buttonTitle="View stores nearby "
           handleClick={handleButtonBannerClick}
         />
-
+        <h2 className={styles.secondTitle}>Madrid Coffe Stores</h2>
         <div className={styles.cardLayout}>
           {coffeStoreData.map((coffeStore) => {
             const { fsq_id: id, name } = coffeStore;
@@ -47,7 +47,7 @@ export default function Home({ coffeStoreData }) {
 
 export async function getStaticProps(context) {
   const MadridLatLong = "40.41708874959783%2C-3.702210342724132";
-  const querySearch = "cafe";
+  const querySearch = "coffee";
   const limit = 6;
   const coffeStoreData = await getCoffeeStoresData(
     MadridLatLong,
