@@ -7,7 +7,7 @@ const Card = ({ title, img, href, className }) => {
     <Link href={href}>
       <a className={className}>
         <div className={cls("glass", styles.container)}>
-          <h2 className={styles.cardHeader}>{title}</h2>
+          <h3 className={styles.cardHeader}>{title}</h3>
           <Image
             className={styles.cardImage}
             src={img}
