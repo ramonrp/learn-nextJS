@@ -8,7 +8,7 @@ import Card from "../components/card";
 import { getCoffeeStoresData } from "../services/getCoffeStores";
 import { useGeolocation } from "../hooks/useGeolocation";
 export default function Home({ coffeStoreData }) {
-  const [nearCoffeStores, setNearCoffeStores] = useState(null);
+  const [nearCoffeStores, setNearCoffeStores] = useState([]);
   const { handleGeoLocation, status, latLong } = useGeolocation();
   const isError = status === "error";
   const isSuccess = status === "success";
@@ -19,7 +19,7 @@ export default function Home({ coffeStoreData }) {
   };
   useEffect(() => {
     if (latLong) {
-      getCoffeeStoresData(latLong, "cafe", 30)
+      getCoffeeStoresData(latLong, "coffee", 30)
         .then((data) => setNearCoffeStores(data))
         .catch((err) => console.log(err));
     }
@@ -40,6 +40,26 @@ export default function Home({ coffeStoreData }) {
           buttonTitle={isLoading ? "Loading..." : "View stores nearby "}
           handleClick={handleButtonBannerClick}
         />
+        {isError && <p>location is not avalaible</p>}
+        {nearCoffeStores.length > 0 && (
+          <>
+            <h2 className={styles.secondTitle}>Near Coffee Stores</h2>
+            <div className={styles.cardLayout}>
+              {nearCoffeStores.map((coffeStore) => {
+                const { id, name, imgUrl } = coffeStore;
+                return (
+                  <Card
+                    key={id}
+                    className={styles.card}
+                    title={name}
+                    img={imgUrl}
+                    href={`/coffee-store/${id}`}
+                  />
+                );
+              })}
+            </div>
+          </>
+        )}
         <h2 className={styles.secondTitle}>Madrid Coffe Stores</h2>
         <div className={styles.cardLayout}>
           {coffeStoreData.map((coffeStore) => {
