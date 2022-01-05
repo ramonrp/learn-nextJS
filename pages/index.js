@@ -7,23 +7,25 @@ import Card from "../components/card";
 
 import { getCoffeeStoresData } from "../services/getCoffeStores";
 import { useGeolocation } from "../hooks/useGeolocation";
+import { useNearStores } from "../context/nearCoffeStore";
 export default function Home({ coffeStoreData }) {
-  const [nearCoffeStores, setNearCoffeStores] = useState([]);
   const { handleGeoLocation, status, latLong } = useGeolocation();
+  const { nearStores, setNearStores } = useNearStores();
+
   const isError = status === "error";
   const isSuccess = status === "success";
   const isLoading = status === "loading";
-  console.log(nearCoffeStores);
+  console.log(nearStores);
   const handleButtonBannerClick = () => {
     handleGeoLocation();
   };
   useEffect(() => {
-    if (latLong) {
-      getCoffeeStoresData(latLong, "coffee", 30)
-        .then((data) => setNearCoffeStores(data))
+    if (nearStores.latLong) {
+      getCoffeeStoresData(nearStores.latLong, "coffee", 30)
+        .then((data) => setNearStores((s) => ({ ...s, nearStores: data })))
         .catch((err) => console.log(err));
     }
-  }, [latLong]);
+  }, [nearStores.latLong, setNearStores]);
 
   return (
     <div className={styles.container}>
@@ -41,11 +43,11 @@ export default function Home({ coffeStoreData }) {
           handleClick={handleButtonBannerClick}
         />
         {isError && <p>location is not avalaible</p>}
-        {nearCoffeStores.length > 0 && (
+        {nearStores.nearStores.length > 0 && (
           <>
             <h2 className={styles.secondTitle}>Near Coffee Stores</h2>
             <div className={styles.cardLayout}>
-              {nearCoffeStores.map((coffeStore) => {
+              {nearStores.nearStores.map((coffeStore) => {
                 const { id, name, imgUrl } = coffeStore;
                 return (
                   <Card
