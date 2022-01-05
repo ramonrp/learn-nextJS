@@ -2,13 +2,13 @@ import { createContext, useContext, useState } from "react";
 
 const NearStores = createContext();
 
-const NearStoreProvider = ({}) => {
-  const [state, setState] = useState({
+const NearStoreProvider = ({ children }) => {
+  const [nearStores, setNearStores] = useState({
     latLong: "",
     nearStores: [],
   });
   return (
-    <NearStores.Provider value={{ state, setState }}>
+    <NearStores.Provider value={{ nearStores, setNearStores }}>
       {children}
     </NearStores.Provider>
   );
@@ -17,7 +17,7 @@ const NearStoreProvider = ({}) => {
 const useNearStores = () => {
   const context = useContext(NearStores);
   if (!context) {
-    throw new error("useNearStores must be used within a NearStoreProvider");
+    throw new Error("useNearStores must be used within a NearStoreProvider");
   }
   return context;
 };
