@@ -8,14 +8,14 @@ const useGeolocation = () => {
     setStatus("success");
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
-    setState({
+    setNearStores({
       ...nearStores,
       latLong: `${latitude},${longitude}`,
     });
   }
   function error() {
     setStatus("error");
-    setState({
+    setNearStores({
       ...nearStores,
       latLong: "",
     });
@@ -28,7 +28,7 @@ const useGeolocation = () => {
       navigator.geolocation.getCurrentPosition(success, error);
     }
   }
-  return { handleGeoLocation, status, latLong: nearStores.latLong };
+  return { handleGeoLocation, status };
 };
 
 export { useGeolocation };
