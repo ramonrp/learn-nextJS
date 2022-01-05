@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import Banner from "../components/banner";
@@ -5,10 +6,25 @@ import Hero from "../components/hero";
 import Card from "../components/card";
 
 import { getCoffeeStoresData } from "../services/getCoffeStores";
+import { useGeolocation } from "../hooks/useGeolocation";
 export default function Home({ coffeStoreData }) {
+  const [nearCoffeStores, setNearCoffeStores] = useState(null);
+  const { handleGeoLocation, status, latLong } = useGeolocation();
+  const isError = status === "error";
+  const isSuccess = status === "success";
+  const isLoading = status === "loading";
+  console.log(nearCoffeStores);
   const handleButtonBannerClick = () => {
-    console.log("button banner click");
+    handleGeoLocation();
   };
+  useEffect(() => {
+    if (latLong) {
+      getCoffeeStoresData(latLong, "cafe", 30)
+        .then((data) => setNearCoffeStores(data))
+        .catch((err) => console.log(err));
+    }
+  }, [latLong]);
+
   return (
     <div className={styles.container}>
       <Head>
@@ -21,7 +37,7 @@ export default function Home({ coffeStoreData }) {
       </div>
       <main className={styles.main}>
         <Banner
-          buttonTitle="View stores nearby "
+          buttonTitle={isLoading ? "Loading..." : "View stores nearby "}
           handleClick={handleButtonBannerClick}
         />
         <h2 className={styles.secondTitle}>Madrid Coffe Stores</h2>
