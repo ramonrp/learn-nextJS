@@ -21,7 +21,10 @@ export default function Home({ coffeStoreData }) {
   };
   useEffect(() => {
     if (nearStores.latLong) {
-      getCoffeeStoresData(nearStores.latLong, "coffee", 30)
+      fetch(
+        `http://localhost:3000/api/getCoffeStoresNear?limit=30&query=coffee&latLong=${nearStores.latLong}`
+      )
+        .then((response) => response.json())
         .then((data) => setNearStores((s) => ({ ...s, nearStores: data })))
         .catch((err) => console.log(err));
     }
