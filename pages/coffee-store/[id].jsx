@@ -41,15 +41,36 @@ const Store = ({ coffeStoreData }) => {
   }, [address, id, imgUrl, name, neighborhood]);
   const [votes, setVotes] = useState(0);
   const fetcher = (...args) => fetch(...args).then((res) => res.json());
-  const { data, error } = useSWR(`/api/getCoffeStoreById?id=${id}`, fetcher);
+  const { data, error, mutate } = useSWR(
+    `/api/getCoffeStoreById?id=${id}`,
+    fetcher
+  );
   useEffect(() => {
     if (data && data.length > 0) {
       setVotes(data[0].votes);
     }
   }, [data]);
-
-  function handleUpvote() {
-    console.log("upvoting");
+  const [isSendingData, setIsSendingData] = useState(false);
+  async function handleUpvote() {
+    mutate([{ ...data[0], votes: data[0].votes + 1 }], false);
+    setIsSendingData(true);
+    try {
+      const options = {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id }),
+      };
+      const response = await fetch("/api/upvoteCoffeStore", options);
+      const dbCoffeStore = await response.json();
+      if (dbCoffeStore && dbCoffeStore.length > 0) {
+        setIsSendingData(false);
+      }
+    } catch (error) {
+      mutate(`/api/getCoffeStoreById?id=${id}`);
+      console.error("something went wrong updating votes", error);
+    }
   }
   return (
     <div className="">
@@ -76,7 +97,11 @@ const Store = ({ coffeStoreData }) => {
           {neighborhood !== undefined > 0 && <p>{neighborhood}</p>}
           <p>{votes} Likes</p>
         </div>
-        <button onClick={handleUpvote} className={styles.button}>
+        <button
+          disabled={isSendingData}
+          onClick={handleUpvote}
+          className={styles.button}
+        >
           upvote!
         </button>
       </div>
