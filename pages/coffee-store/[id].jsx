@@ -21,6 +21,23 @@ const Store = ({ coffeStoreData }) => {
 
   const { name, neighborhood, address, imgUrl } = coffeStore;
 
+  useEffect(() => {
+    const data = {
+      id,
+      name,
+      neighborhood,
+      address,
+      imgUrl,
+    };
+    const options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    };
+    fetch("/api/createCoffeStore", options);
+  }, [address, id, imgUrl, name, neighborhood]);
   function handleUpvote() {
     console.log("upvoting");
   }
