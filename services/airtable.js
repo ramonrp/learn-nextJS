@@ -25,4 +25,15 @@ async function addCoffeStore(record) {
   ]);
 }
 
-export { getCoffeStoreById, addCoffeStore };
+async function updateFieldVote(record) {
+  return base("coffe-stores").update([
+    {
+      id: record.airtableId,
+      fields: {
+        votes: record.votes,
+      },
+    },
+  ]);
+}
+
+export { getCoffeStoreById, addCoffeStore, updateFieldVote };
