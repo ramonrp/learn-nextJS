@@ -18,6 +18,7 @@ async function addCoffeStore(record) {
   return base("coffe-stores").create([
     {
       fields: {
+        votes: 0,
         ...record,
       },
     },
