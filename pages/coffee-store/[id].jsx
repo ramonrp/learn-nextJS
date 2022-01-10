@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import useSWR from "swr";
 import { getCoffeeStoresData } from "../../services/getCoffeStores";
 import styles from "./coffe-store.module.css";
 import { useNearStores } from "../../context/nearCoffeStore";
@@ -38,6 +39,15 @@ const Store = ({ coffeStoreData }) => {
     };
     fetch("/api/createCoffeStore", options);
   }, [address, id, imgUrl, name, neighborhood]);
+  const [votes, setVotes] = useState(0);
+  const fetcher = (...args) => fetch(...args).then((res) => res.json());
+  const { data, error } = useSWR(`/api/getCoffeStoreById?id=${id}`, fetcher);
+  useEffect(() => {
+    if (data && data.length > 0) {
+      setVotes(data[0].votes);
+    }
+  }, [data]);
+
   function handleUpvote() {
     console.log("upvoting");
   }
@@ -63,9 +73,8 @@ const Store = ({ coffeStoreData }) => {
         <div className="glass">
           <p>{name}</p>
           <p>{address}</p>
-          <p>1 like</p>
           {neighborhood !== undefined > 0 && <p>{neighborhood}</p>}
-          <p>0 Likes</p>
+          <p>{votes} Likes</p>
         </div>
         <button onClick={handleUpvote} className={styles.button}>
           upvote!
@@ -87,7 +96,10 @@ export async function getStaticProps({ params }) {
     querySearch,
     limit
   );
-  const coffeStoreData = coffeStoresData.find((store) => store.id == id) || {};
+  let coffeStoreData = coffeStoresData.find((store) => store.id == id);
+  if (coffeStoreData === undefined) {
+    coffeStoreData = {};
+  }
   return {
     props: { coffeStoreData },
   };
@@ -103,7 +115,9 @@ export async function getStaticPaths() {
     limit
   );
   return {
-    paths: coffeStoreData.map((store) => ({ params: { id: store.id } })),
+    paths: coffeStoreData.map((store) => ({
+      params: { id: store.id.toString() },
+    })),
     fallback: true,
   };
 }
