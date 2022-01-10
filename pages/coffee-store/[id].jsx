@@ -4,7 +4,6 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { getCoffeeStoresData } from "../../services/getCoffeStores";
 import styles from "./coffe-store.module.css";
-
 import { useNearStores } from "../../context/nearCoffeStore";
 const Store = ({ coffeStoreData }) => {
   const router = useRouter();
@@ -22,9 +21,12 @@ const Store = ({ coffeStoreData }) => {
 
   const { name, neighborhood, address, imgUrl } = coffeStore;
 
+  function handleUpvote() {
+    console.log("upvoting");
+  }
   return (
-    <div className={styles.layout}>
-      <div className={styles.col1}>
+    <div className="">
+      <div className="">
         <Link href="/">
           <a>Back to Home</a>
         </Link>{" "}
@@ -40,13 +42,17 @@ const Store = ({ coffeStoreData }) => {
           ></Image>
         </div>
       </div>
-      <div className={styles.col2}>
+      <div className="">
         <div className="glass">
           <p>{name}</p>
           <p>{address}</p>
           <p>1 like</p>
           {neighborhood !== undefined > 0 && <p>{neighborhood}</p>}
+          <p>0 Likes</p>
         </div>
+        <button onClick={handleUpvote} className={styles.button}>
+          upvote!
+        </button>
       </div>
     </div>
   );
